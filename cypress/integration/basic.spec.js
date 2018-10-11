@@ -1,4 +1,4 @@
-describe('React-Redux-Saga-Boilerplate', () => {
+describe('City Traffic React.js', () => {
   it('should assert that <title> is correct', () => {
     cy.visit('http://localhost:3000');
     cy.title()

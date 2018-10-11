@@ -53,12 +53,14 @@
     "function-paren-newline": "off",
     "generator-star-spacing": "off",
     "global-require": "off",
-    "indent": ["warn", 2, { "SwitchCase": 1 }],
+    "indent": ["off", 2, { "SwitchCase": 1 }],
     "max-len": "off",
     "newline-per-chained-call": ["warn", { "ignoreChainWithDepth": 5 }],
     "no-case-declarations": "warn",
     "no-confusing-arrow": ["warn", { "allowParens": true }],
     "no-mixed-spaces-and-tabs": ["warn", "smart-tabs"],
+    "no-tabs": "off",
+    "no-extra-semi": "off",
     "no-multi-spaces": [
       "warn", {
         "exceptions": {
@@ -140,11 +142,14 @@
     "jsx-a11y/label-has-for": "off",
     "jsx-a11y/no-static-element-interactions": "off",
     "jsx-quotes": "warn",
+    "no-useless-rename": "warn",
+    "keyword-spacing": "warn",
+    "no-unreachable": "warn",
     "react/forbid-prop-types": "off",
     "react/jsx-closing-bracket-location": ["warn", "line-aligned"],
     "react/jsx-first-prop-new-line": ["warn", "multiline"],
-    "react/jsx-indent": ["warn", 2],
-    "react/jsx-indent-props": ["warn", 2],
+    "react/jsx-indent": ["warn", "tab"],
+    "react/jsx-indent-props": ["warn", "tab"],
     "react/jsx-key": "warn",
     "react/jsx-max-props-per-line": ["warn", { "maximum": 4 }],
     "react/jsx-no-target-blank": "off",
@@ -156,6 +161,7 @@
     "react/jsx-no-duplicate-props": "warn",
     "react/jsx-one-expression-per-line": "off",
     "react/jsx-pascal-case": "warn",
+    "react/jsx-filename-extension": "off",
     "react/no-direct-mutation-state": "warn",
     "react/no-unused-prop-types": "warn",
     "react/no-unused-state": "warn",
@@ -164,6 +170,7 @@
     "react/prop-types": "error",
     "react/require-default-props": "off",
     "react/sort-prop-types": "warn",
+    "react/jsx-tag-spacing": "off",
     "react/sort-comp": [
       "warn",
       {
