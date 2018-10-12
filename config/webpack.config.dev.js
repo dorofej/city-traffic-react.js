@@ -96,6 +96,22 @@ module.exports = merge.smart(webpackConfig, {
 		// You can remove this if you don't use Moment.js:
 		new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 	],
+	module: {
+		rules: [
+			{
+				test: /\.css$/,
+				use: [
+					require.resolve('style-loader'),
+					{
+						loader: require.resolve('css-fast-loader'),
+						options: {
+							importLoaders: 1,
+						},
+					},
+				],
+			},
+		],
+	},
 	// Turn off performance hints during development because we don't do any
 	// splitting or minification in interest of speed. These warnings become
 	// cumbersome.

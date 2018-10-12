@@ -20,7 +20,7 @@ const gitInfoPlugin = new GitInfoPlugin({
 const cssLoaders = [
 	isProd ? MiniCssExtractPlugin.loader : { loader: 'style' },
 	{
-		loader: 'css',
+		loader: isProd ? 'css' : 'css-fast',
 		options: {
 			sourceMap: true,
 		},
