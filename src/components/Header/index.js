@@ -3,9 +3,13 @@ import { Link } from 'react-router-dom';
 
 import './styles.scss';
 
+const l = require('utils/log')(module);
+
 
 class Header extends Component {
 	render() {
+		l();
+
 		return (
 			<div
 				className="header"

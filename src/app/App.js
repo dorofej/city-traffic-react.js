@@ -5,9 +5,13 @@ import Header from 'components/Header';
 
 import './styles.scss';
 
+const l = require('utils/log')(module);
+
 
 class App extends Component {
 	render() {
+		l();
+
 		return (
 			<div>
 				<Router>

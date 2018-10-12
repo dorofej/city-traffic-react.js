@@ -1,7 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+const l = require('utils/log')(module);
+
+
 const Loader = ({ pulse }) => {
+	l();
+
 	let html;
 
 	if (pulse) {
