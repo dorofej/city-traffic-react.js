@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router';
 
 import Header from 'components/Header';
-import Dashboard from 'Dashboard';
+import history from 'libs/history';
+
+import AppRouter from './Router';
+
 
 import './styles.scss';
 
@@ -14,12 +17,12 @@ class App extends Component {
 		l();
 
 		return (
-			<div>
-				<Router>
+			<ConnectedRouter history={history}>
+				<div>
 					<Header/>
-				</Router>
-				<Dashboard/>
-			</div>
+					<AppRouter/>
+				</div>
+			</ConnectedRouter>
 		);
 	}
 };
