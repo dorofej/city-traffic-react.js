@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ConnectedRouter } from 'connected-react-router';
+import { hot } from 'react-hot-loader';
 
 import Header from 'components/Header';
 import history from 'libs/history';
@@ -28,4 +29,4 @@ class App extends Component {
 };
 
 
-export default App;
+export default hot(module)(App);
