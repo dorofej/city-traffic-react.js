@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 
 import './styles.scss';
 
-import config from 'config';
+import { topbarHeight } from 'config';
 import findBrowserDims from 'libs/findBrowserDims';
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -17,7 +17,6 @@ L.Icon.Default.mergeOptions({
 
 const l = require('utils/log')(module);
 
-const { topbarHeight } = config;
 
 class Dashboard extends Component {
 	constructor(props) {
