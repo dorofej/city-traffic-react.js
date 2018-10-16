@@ -5,7 +5,7 @@ const createLogger = (mod) => {
 
 	let label = '';
 	if (mod && (typeof mod.id === 'string')) {
-		label = mod.id.split("/").slice(-1).join('');
+		label = mod.id.split('/').slice(-2).join('/');
 	};
 
 	return (...args) => {
