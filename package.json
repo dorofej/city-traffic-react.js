@@ -26,6 +26,7 @@
     "ease-component": "1.0.0",
     "events-polyfill": "2.0.7",
     "fbjs": "1.0.0",
+    "firebase": "5.5.4",
     "history": "4.7.2",
     "immutability-helper": "2.8.1",
     "jquery": "3.3.1",

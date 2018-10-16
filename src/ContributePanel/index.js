@@ -1,5 +1,7 @@
 import React, { Component, Fragment } from 'react';
 
+import { fb, dbName } from 'config';
+
 import PlaceInput from './PlaceInput';
 import { AddButton, CloseButton } from './Buttons';
 
@@ -7,13 +9,6 @@ import './styles.scss';
 
 const l = require('utils/log')(module);
 
-const fakeEndPoints = [
-	'Start Point 1',
-	'Start Point 2',
-	'Start Point 3',
-	'Start Point 4',
-	'End Point',
-];
 
 class ContributePanel extends Component {
 	constructor(props) {
@@ -26,32 +21,77 @@ class ContributePanel extends Component {
 		this.addEndPoint = this.addEndPoint.bind(this);
 
 		this.state = {
-			endPoints: [...fakeEndPoints],
+			endPoints: [],
 		};
+	}
+
+	componentWillMount() {
+		l();
+
+		fb.database()
+			.ref(dbName)
+			.on('value', (snapshot) => {
+				l('componentWillMount - fb.database().on(value)');
+				const endPoints = [];
+
+				snapshot.forEach((endPoint) => {
+					endPoints.push({
+						id: endPoint.key,
+						placeValue: endPoint.val(),
+					});
+				});
+
+				if (endPoints.length < 2) {
+					fb.database().ref(dbName).push('');
+				};
+			});
+	}
+
+	componentDidMount() {
+		l();
+
+		fb.database()
+			.ref(dbName)
+			.on('value', (snapshot) => {
+				l('componentDidMount - fb.database().on(value)');
+				const endPoints = [];
+
+				snapshot.forEach((endPoint) => {
+					endPoints.push({
+						id: endPoint.key,
+						placeValue: endPoint.val(),
+					});
+				});
+
+				if (endPoints.length > 2) {
+					endPoints.push(endPoints.splice(1, 1)[0]);
+				};
+
+				this.setState({ endPoints });
+			});
 	}
 
 	addEndPoint() {
 		l();
 
-		const { endPoints } = this.state;
-		endPoints.splice(endPoints.length - 1, 0, '');
-		this.setState({ endPoints: [...endPoints] });
+		fb.database().ref(dbName).push('');
 	}
 
 	closeEndPoint(event, index) {
 		l();
 
 		const { endPoints } = this.state;
-		endPoints.splice(index, 1);
-		this.setState({ endPoints: [...endPoints] });
+		fb.database().ref(dbName).child(endPoints[index].id).remove();
 	}
 
 	handleInputChange({ target }, index) {
 		l();
 
 		const { endPoints } = this.state;
-		endPoints[index] = target.value;
-		this.setState({ endPoints: [...endPoints] });
+
+		fb.database().ref(dbName).update({
+			[endPoints[index].id]: target.value,
+		});
 	}
 
 	renderPlacesInputs() {
@@ -66,7 +106,7 @@ class ContributePanel extends Component {
 					return (
 						<PlaceInput
 							key={index}
-							value={endPoint}
+							value={endPoint.placeValue}
 							placeholder="Start Point"
 							onChange={(event) => { this.handleInputChange(event, index); }}
 						/>
@@ -79,7 +119,7 @@ class ContributePanel extends Component {
 								onClick={this.addEndPoint}
 							/>
 							<PlaceInput
-								value={endPoint}
+								value={endPoint.placeValue}
 								placeholder="End Point"
 								onChange={(event) => { this.handleInputChange(event, index); }}
 							/>
@@ -93,7 +133,7 @@ class ContributePanel extends Component {
 							key={index}
 						>
 							<PlaceInput
-								value={endPoint}
+								value={endPoint.placeValue}
 								onChange={(event) => { this.handleInputChange(event, index); }}
 								style={{ marginRight: 20 }}
 							/>
