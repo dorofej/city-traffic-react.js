@@ -1,51 +1,105 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { OpenStreetMapProvider } from 'leaflet-geosearch';
+
+import SearchSuggestions from './SearchSuggestions';
 
 const l = require('utils/log')(module);
 
 
-const PlaceInput = ({
-	placeholder,
-	value,
-	onChange,
-	style = {},
-}) => {
-	l();
+const provider = new OpenStreetMapProvider();
 
-	return (
-		<div
-			className="contribute__input-wrapper"
-			style={style}
-		>
-			<input
-				className="contribute__input"
-				value={value}
-				onChange={onChange}
-				type="text"
-				placeholder={placeholder}
-			/>
-			<span
-				className="contribute__input-clear-wrapper"
-				onClick={() => {
-					// Clear Place Input using fakeEvent
-					const fakeEvent = { target: { value: '' } };
-					onChange(fakeEvent);
-				}}
-			>
-				<img
-					className="contribute__input-clear"
-					src={require('images/close.svg')}
-					alt=""
+class PlaceInput extends Component {
+	constructor(props) {
+		l();
+		super(props);
+
+		this.handleSearch = this.handleSearch.bind(this);
+		this.handleSuggestionClick = this.handleSuggestionClick.bind(this);
+
+		this.state = {
+			suggestions: [],
+			isActive: false,
+		};
+	}
+
+	handleSearch(event) {
+		l();
+
+		const { onChange } = this.props;
+		onChange(event);
+
+		provider
+			.search({ query: event.target.value })
+			.then((result) => {
+				const suggestions = result.map(({ label }) => (label));
+				this.setState({ suggestions });
+			})
+			.catch((error) => {
+				l('LEAFLET SEARCH - ERROR: ', error);
+			});
+	}
+
+	handleSuggestionClick(value) {
+		l();
+
+		this.handleSearch({ target: { value } });
+	}
+
+	render() {
+		l();
+
+		const {
+			placeholder,
+			value,
+			style = {},
+		} = this.props;
+
+		const { isActive, suggestions } = this.state;
+
+		return (
+			<div className="contribute__suggestions-wrapper">
+				<div
+					className="contribute__input-wrapper"
+					style={style}
+				>
+					<div className="contribute__input-left-padding"/>
+					<input
+						className="contribute__input"
+						value={value}
+						onChange={this.handleSearch}
+						type="text"
+						placeholder={placeholder}
+						onFocus={() => this.setState({ isActive: true })}
+						onBlurCapture={() => setTimeout(() => this.setState({ isActive: false }), 100)}
+					/>
+					<span
+						className="contribute__input-clear-wrapper"
+						onClick={() => {
+							/* Clear Place Input using fakeEvent */
+							this.handleSearch({ target: { value: '' } });
+						}}
+					>
+						<img
+							className="contribute__input-clear"
+							src={require('images/close.svg')}
+							alt=""
+						/>
+					</span>
+				</div>
+				<SearchSuggestions
+					suggestions={isActive ? suggestions : []}
+					onClick={this.handleSuggestionClick}
 				/>
-			</span>
-		</div>
-	);
+			</div>
+		);
+	}
 };
 
 PlaceInput.propTypes = {
+	onChange: PropTypes.func.isRequired,
 	placeholder: PropTypes.string,
 	value: PropTypes.string,
-	onChange: PropTypes.func.isRequired,
 	style: PropTypes.object,
 };
 

@@ -1,20 +1,27 @@
 .contribute {
 	padding: 30px;
 
+	&__suggestions-wrapper {
+		width: 100%;
+	}
+
 	&__input-wrapper {
 		display: flex;
 		margin: 14px 0;
 		height: 42px;
 		box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
 		border-radius: 3px;
-		padding-left: 20px;
 		width: 100%;
+	}
+
+	&__input-left-padding {
+		width: 20px;
 	}
 
 	&__input {
 		border: 0;
 		font-size: 20px;
-		width: calc(100% - 42px);
+		width: 100%;
 		outline-width: 0;
 	}
 
@@ -49,6 +56,7 @@
 	&--add,
 	&--close {
 		opacity: 0.8;
+		margin: 0 10px;
 		cursor: pointer;
 		min-width: 25px; // Min and max widths are setted
 		max-width: 25px; // because close button strange behavior
@@ -79,4 +87,30 @@
 		font-size: 14px;
 		font-weight: normal;
 	}
+}
+
+.search-suggestions__results {
+	width: 100%;
+	height: 0;
+}
+
+.search-suggestions__result-wrapper {
+	transform: translate(0, -15px);
+	z-index: 1;
+	width: 100%;
+	position: relative;
+	background: rgba(255, 255, 255, 1);
+	color: rgba(0, 0, 0, 1);
+	overflow: hidden;
+	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+.search-suggestions__result-wrapper:last-child {
+	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
+	border-radius: 0 0 3px 3px;
+}
+
+.search-suggestions__result {
+	padding: 10px 0 10px 20px;
+	cursor: pointer;
 }
