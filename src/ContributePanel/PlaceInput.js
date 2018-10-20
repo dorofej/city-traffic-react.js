@@ -14,7 +14,7 @@ class PlaceInput extends Component {
 		l();
 		super(props);
 
-		this.handleSearch = this.handleSearch.bind(this);
+		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleSuggestionClick = this.handleSuggestionClick.bind(this);
 
 		this.state = {
@@ -23,14 +23,15 @@ class PlaceInput extends Component {
 		};
 	}
 
-	handleSearch(event) {
+	handleInputChange({ target }) {
 		l();
 
+		const { value } = target;
 		const { onChange } = this.props;
-		onChange(event);
+		onChange({ label: value });
 
 		provider
-			.search({ query: event.target.value })
+			.search({ query: value })
 			.then((result) => {
 				const suggestions = result.map(({ label }) => (label));
 				this.setState({ suggestions });
@@ -43,7 +44,20 @@ class PlaceInput extends Component {
 	handleSuggestionClick(value) {
 		l();
 
-		this.handleSearch({ target: { value } });
+		const { onChange } = this.props;
+
+		provider
+			.search({ query: value })
+			.then((result) => {
+				if (result[0]) {
+					onChange(result[0]);
+				} else {
+					onChange({ label: '' });
+				};
+			})
+			.catch((error) => {
+				l('LEAFLET SEARCH - ERROR: ', error);
+			});
 	}
 
 	render() {
@@ -66,8 +80,8 @@ class PlaceInput extends Component {
 					<div className="contribute__input-left-padding"/>
 					<input
 						className="contribute__input"
-						value={value}
-						onChange={this.handleSearch}
+						value={value.label}
+						onChange={this.handleInputChange}
 						type="text"
 						placeholder={placeholder}
 						onFocus={() => this.setState({ isActive: true })}
@@ -77,7 +91,7 @@ class PlaceInput extends Component {
 						className="contribute__input-clear-wrapper"
 						onClick={() => {
 							/* Clear Place Input using fakeEvent */
-							this.handleSearch({ target: { value: '' } });
+							this.handleInputChange({ target: { value: '' } });
 						}}
 					>
 						<img
@@ -99,7 +113,7 @@ class PlaceInput extends Component {
 PlaceInput.propTypes = {
 	onChange: PropTypes.func.isRequired,
 	placeholder: PropTypes.string,
-	value: PropTypes.string,
+	value: PropTypes.object,
 	style: PropTypes.object,
 };
 

@@ -16,7 +16,7 @@ class ContributePanel extends Component {
 
 		super(props);
 
-		this.handleInputChange = this.handleInputChange.bind(this);
+		this.handlePlaceInputChange = this.handlePlaceInputChange.bind(this);
 		this.closeEndPoint = this.closeEndPoint.bind(this);
 		this.addEndPoint = this.addEndPoint.bind(this);
 
@@ -42,7 +42,7 @@ class ContributePanel extends Component {
 				});
 
 				if (endPoints.length < 2) {
-					fb.database().ref(dbName).push('');
+					fb.database().ref(dbName).push({ label: '' });
 				};
 			});
 	}
@@ -74,7 +74,7 @@ class ContributePanel extends Component {
 	addEndPoint() {
 		l();
 
-		fb.database().ref(dbName).push('');
+		fb.database().ref(dbName).push({ label: '' });
 	}
 
 	closeEndPoint(event, index) {
@@ -84,13 +84,13 @@ class ContributePanel extends Component {
 		fb.database().ref(dbName).child(endPoints[index].id).remove();
 	}
 
-	handleInputChange({ target }, index) {
+	handlePlaceInputChange(value, index) {
 		l();
 
 		const { endPoints } = this.state;
 
 		fb.database().ref(dbName).update({
-			[endPoints[index].id]: target.value,
+			[endPoints[index].id]: value,
 		});
 	}
 
@@ -108,7 +108,7 @@ class ContributePanel extends Component {
 							key={index}
 							value={endPoint.placeValue}
 							placeholder="Start Point"
-							onChange={(event) => { this.handleInputChange(event, index); }}
+							onChange={(value) => { this.handlePlaceInputChange(value, index); }}
 						/>
 					);
 				// Intermediate Point
@@ -121,7 +121,7 @@ class ContributePanel extends Component {
 							<PlaceInput
 								value={endPoint.placeValue}
 								placeholder="End Point"
-								onChange={(event) => { this.handleInputChange(event, index); }}
+								onChange={(value) => { this.handlePlaceInputChange(value, index); }}
 							/>
 						</Fragment>
 					);
@@ -134,7 +134,7 @@ class ContributePanel extends Component {
 						>
 							<PlaceInput
 								value={endPoint.placeValue}
-								onChange={(event) => { this.handleInputChange(event, index); }}
+								onChange={(value) => { this.handlePlaceInputChange(value, index); }}
 								style={{ marginRight: 20 }}
 							/>
 							<CloseButton
