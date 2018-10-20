@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Map, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import * as d3Array from 'd3-array';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import './styles.scss';
 
-import { topbarHeight } from 'config';
+import { topbarHeight, fb, dbName } from 'config';
 import findBrowserDims from 'libs/findBrowserDims';
+import getGeoBounds from 'libs/geoBounds';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -29,20 +31,47 @@ class Dashboard extends Component {
 		this.state = {
 			width: 10000,
 			height: 10000,
-			lat: 51.505,
-			lng: -0.09,
-			zoom: 10,
 			loaded: false,
+			positions: [],
 		};
 	}
 
 	componentDidMount() {
 		l();
 
-		setTimeout(() => { this.setState({ loaded: true }); }, 0);
-
 		this.updateDimensions();
 		window.addEventListener('resize', this.updateDimensions);
+
+		fb.database()
+			.ref(dbName)
+			.on('value', (snapshot) => {
+				l('componentDidMount - fb.database().on(value)');
+
+				const endPoints = [];
+
+				snapshot.forEach((endPoint) => {
+					const { x, y, label } = endPoint.val();
+					endPoints.push({ id: endPoint.key, x, y, label });
+				});
+
+				if (endPoints.length > 2) {
+					endPoints.push(endPoints.splice(1, 1)[0]);
+				};
+
+				const positions = endPoints
+					.filter(({ x, y }) => (x && y))
+					.map(({ id, x, y, label }) => ({
+						id,
+						lng: Number(x),
+						lat: Number(y),
+						marker: label,
+					}));
+
+				l('endPoints: ', endPoints);
+				l('positions: ', positions);
+
+				this.setState({ positions, loaded: true });
+			});
 	}
 
 	componentWillUnmount() {
@@ -61,23 +90,35 @@ class Dashboard extends Component {
 	renderMap() {
 		l();
 
-		const { lat, lng, zoom } = this.state;
-		const position = [lat, lng];
+		const { positions } = this.state;
+
+		let bounds = [[-90, -180], [90, 180]];
+		if (positions.length) {
+			bounds = getGeoBounds(
+				d3Array.extent(positions, ({ lat }) => (lat)),
+				d3Array.extent(positions, ({ lng }) => (lng))
+			);
+		};
 
 		return (
-			<Map
-				center={position}
-				zoom={zoom}
-			>
+			<Map bounds={bounds}>
 				<TileLayer
 					attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
 					url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
 				/>
-				<Marker position={position}>
-					<Popup>
-						A pretty CSS3 popup. <br /> Easily customizable.
-					</Popup>
-				</Marker>
+				{
+					positions.map(({ lat, lng, marker }) => (
+						<Marker position={{ lat, lng }}>
+							<Popup>
+								{marker}
+							</Popup>
+						</Marker>
+					))
+				}
+				<Polyline
+					color="lime"
+					positions={positions}
+				/>
 			</Map>
 		);
 	}
