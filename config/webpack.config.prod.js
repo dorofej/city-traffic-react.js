@@ -166,4 +166,15 @@ module.exports = merge.smart(webpackConfig, {
 			],
 		}),
 	],
+	module: {
+		rules: [
+			{
+				test: /\.css$/,
+				use: [
+					require.resolve('style-loader'),
+					require.resolve('css-loader'),
+				],
+			},
+		],
+	},
 });
