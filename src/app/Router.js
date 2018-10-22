@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import Dashboard from 'Dashboard';
 import ContributePanel from 'ContributePanel';
@@ -13,6 +13,12 @@ class Router extends Component {
 
 		return (
 			<Switch>
+				<Route
+					exact
+					key="root"
+					path="/"
+					component={() => (<Redirect to="/dashboard"/>)}
+				/>
 				<Route
 					exact
 					key="dashboard"
