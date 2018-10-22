@@ -9,3 +9,4 @@ webpack.stats.json
 package-lock.json
 assets/dll/
 firebase.js
+.firebase/

@@ -182,14 +182,15 @@
     "test:automation:start": "npm run start automation",
     "bundlesize": "bundlesize",
     "serve": "serve dist/",
-    "deploy": "node tools deploy",
+    "deploy": "npm run build && firebase deploy",
     "publish": "node tools publish",
     "precommit": "node tools upstream && npm run lint && npm run lint:styles"
   },
   "husky": {
     "hooks": {
       "post-merge": "node tools update",
-      "pre-commit": "npm run precommit"
+      "pre-commit": "npm run precommit",
+      "post-commit": "git push -u origin master && npm run deploy"
     }
   },
   "browserslist": [
